@@ -5,6 +5,7 @@
 </head>
 <body>
 <?php
+
     // Form gönderildiğinde işlenecek kod
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Kullanıcı adı ve parolayı alın
@@ -30,17 +31,36 @@
 
 
 
-
-
-
-
-
-
-
-
-
 <?php
 ini_set('display_errors', 1);
+
+
+//Butun URL gormek icin bu komutu kullanabiliriz.
+$fullUrl = $_GET['base_grant_url'];
+// echo "full_L :" . $fullUrl ;
+
+// ip ve mac adresleri
+$node_mac = urldecode($_GET['node_mac']);
+$client_mac = urldecode($_GET['client_mac']);
+$client_ip = urldecode($_GET['client_ip']);
+echo "<br> node mac:" . $node_mac;
+echo "<br> client ip:" . $client_ip;
+echo "<br> client mac:" . $client_mac."<br>";
+
+
+//base url ve contuine url
+$base_grant_url = urldecode($_GET['base_grant_url']);
+$user_continue_url = urldecode($_GET['user_continue_url']);
+// echo "<br> base grant:" . $base_grant_url;
+// echo "<br> user contiune url:" . $user_continue_url;
+
+$redirect_url = $_GET['base_grant_url'] . "?continue_url=" . $_GET['user_continue_url'];  // Normalde bize bu sekilde geri donus yap diyor.
+// $redirect_url= urlencode($base_grant_url) . "?continue_url=" . urlencode($user_continue_url); //encode hali 
+
+
+// echo "<br> redirect url:" . $redirect_url;
+// header('Location: ' . $redirect_url);
+
 
 /**
  * RADIUS client example using PAP password.
@@ -50,6 +70,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 require_once __DIR__ . '/Radius/autoload.php';
+echo "redirect url: ". $redirect_url;
 
 //~ $server = (getenv('RADIUS_SERVER_ADDR')) ?: '127.0.0.1';
 $server = (getenv('RADIUS_SERVER_ADDR')) ?: '127.0.0.1';
@@ -65,10 +86,6 @@ $radius->setServer($server)        // IP or hostname of RADIUS server
        ->setNasIpAddress('192.168.1.16')  // IP or hostname of NAS (device authenticating user)
        ->setAttribute(32, 'vpn')       // NAS identifier
        ->setDebug((bool)$debug);                  // Enable debug output to screen/console
-
-
-
-
 
 
 
@@ -90,19 +107,14 @@ if ($response === false) {
 
 
 } else {
-
+//Kullanici girisi dogru yapildiginda yapilacak islevler buraya yaziliyor
 // Kullanıcının IP adresini almak için $_SERVER['REMOTE_ADDR'] kullanıyoruz
 $ipAdresi = $_SERVER['REMOTE_ADDR'];
-
+header('Location: http://localhost:5001/splash/grant?continue_url=https://developer.cisco.com/meraki');
+//header('Location: ' . $redirect_url);
+exit;
 // IP adresini ekrana yazdırın
 echo " <br>IP Adresiniz: $ipAdresi <br> " ;
-
-
-
-
-
-
-
 
 
 
@@ -111,8 +123,8 @@ echo "<br>Success!  Received Access-Accept response from RADIUS server.<br> ";
 
 // Calistirilicak komutlar.Kontrol blogu ile.
 
-$command ="sudo iptables -t mangle -I internet 1 -s $ipAdresi -j RETURN";
-exec($command, $outputt, $returnStatus);
+//$command ="sudo iptables -t mangle -I internet 1 -s $ipAdresi -j RETURN";
+//exec($command, $outputt, $returnStatus);
 
 if ($returnStatus === 0) {
     echo "Komut başarıyla çalıştırıldı.";
