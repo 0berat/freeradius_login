@@ -34,11 +34,6 @@
 <?php
 ini_set('display_errors', 1);
 
-
-//Butun URL gormek icin bu komutu kullanabiliriz.
-$fullUrl = $_GET['base_grant_url'];
-// echo "full_L :" . $fullUrl ;
-
 // ip ve mac adresleri
 $node_mac = urldecode($_GET['node_mac']);
 $client_mac = urldecode($_GET['client_mac']);
@@ -88,8 +83,6 @@ $radius->setServer($server)        // IP or hostname of RADIUS server
        ->setDebug((bool)$debug);                  // Enable debug output to screen/console
 
 
-
-
 // Send access request for a user with username = 'username' and password = 'password!'
 echo "Sending access request to $server with username $user\n<br>";
 $response = $radius->accessRequest($user, $pass);
@@ -105,33 +98,14 @@ if ($response === false) {
    echo "kullanici isminiz: $user  <br>";
    echo "parolaniz: $pass <br>";
 
-
 } else {
 //Kullanici girisi dogru yapildiginda yapilacak islevler buraya yaziliyor
-// Kullanıcının IP adresini almak için $_SERVER['REMOTE_ADDR'] kullanıyoruz
 $ipAdresi = $_SERVER['REMOTE_ADDR'];
 header('Location: http://localhost:5001/splash/grant?continue_url=https://developer.cisco.com/meraki');
 //header('Location: ' . $redirect_url);
 exit;
-// IP adresini ekrana yazdırın
 echo " <br>IP Adresiniz: $ipAdresi <br> " ;
-
-
-
 echo "<br>Success!  Received Access-Accept response from RADIUS server.<br> ";
-
-
-// Calistirilicak komutlar.Kontrol blogu ile.
-
-//$command ="sudo iptables -t mangle -I internet 1 -s $ipAdresi -j RETURN";
-//exec($command, $outputt, $returnStatus);
-
-if ($returnStatus === 0) {
-    echo "Komut başarıyla çalıştırıldı.";
-} else {
-    echo "Komut çalıştırılırken bir hata oluştu.";
-}
-echo "\n <br> Giriş başarılı. Hoş geldiniz, " . $username . "!";
 }
 #$radius = radius_auth_open();
 # phpinfo(); 
