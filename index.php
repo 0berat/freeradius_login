@@ -101,8 +101,8 @@ if ($response === false) {
 } else {
 //Kullanici girisi dogru yapildiginda yapilacak islevler buraya yaziliyor
 $ipAdresi = $_SERVER['REMOTE_ADDR'];
-header('Location: http://localhost:5001/splash/grant?continue_url=https://developer.cisco.com/meraki');
-//header('Location: ' . $redirect_url);
+//header('Location: http://localhost:5001/splash/grant?continue_url=https://developer.cisco.com/meraki');
+header('Location: ' . $redirect_url);
 exit;
 echo " <br>IP Adresiniz: $ipAdresi <br> " ;
 echo "<br>Success!  Received Access-Accept response from RADIUS server.<br> ";
